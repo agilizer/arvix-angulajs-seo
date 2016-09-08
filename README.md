@@ -9,6 +9,7 @@
 #开发工具
 需要集成 gradle.<br>
 可以使用eclipse 或者 sts 或者idea.
+本地需要安装redis做为默认缓存。
 
 #spring loaded
 spring loaded作用为,更改代码后更新虚拟机字节码,即热部署.<br>
@@ -28,6 +29,9 @@ jar包已经下载到devLib目录<br>
  
 #项目配置
 都在application.properties下面。
+cache.timeout: 1
+cache.timeout.timeunit: DAYS
+cache.domain: http://www.ostay.cn   #只有该域名下的页面才做redis缓存。
 
 
 
