@@ -35,6 +35,8 @@ configurations {
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-tomcat')
+	compile('org.springframework.boot:spring-boot-starter-redis')
+	//compile('org.springframework.boot:spring-boot-starter-cache')
 	compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '2.53.1'
 	// https://mvnrepository.com/artifact/net.sourceforge.htmlunit/htmlunit-core-js
 	compile group: 'net.sourceforge.htmlunit', name: 'htmlunit-core-js', version: '2.23'

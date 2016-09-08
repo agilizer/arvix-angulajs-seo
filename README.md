@@ -19,12 +19,15 @@ jar包已经下载到devLib目录<br>
 -javaagent:/home/asdtiang/workspace-sts-3.6.3.SR1/study/devLib/springloaded-1.2.3.RELEASE.jar -noverify
 ‪E:\study\devLib\springloaded-1.2.3.RELEASE.jar
 
-#开发环境应该加入以下参数
--javaagent:path/springloaded-1.2.3.RELEASE.jar  -noverify   -Dspring.profiles.active=dev  -Ddb.conf.value=dev
-
 #项目启动
 直接运行cn.arvix.angularjs.seo.SeoApplication
 可以 run as Java Application
+
+#war包生成 
+ gradle clean war   -Dfile.encoding=UTF-8  
+ 
+#项目配置
+都在application.properties下面。
 
 
 
