@@ -51,9 +51,17 @@ public class ProxPassFilter implements Filter {
 			}
 		}		
 		String URI = request.getRequestURI();
-		log.info("URI:{}", URI+"?"+request.getQueryString());
+		String queryStr = request.getQueryString();
+		log.info("URI:{},queryStr:{}", URI,request.getQueryString());
+		boolean isSeo = false;
 		if(!URI.startsWith("/api/v1") && !"/".equals(URI) && URI.indexOf(".js")<0 && URI.indexOf(".css")<0
-			&& URI.indexOf("png")<0 && URI.indexOf("swagger")<0	&& URI.indexOf("api-docs")<0){
+				&& URI.indexOf("png")<0 && URI.indexOf("swagger")<0	&& URI.indexOf("api-docs")<0){
+			isSeo= true;
+		}	
+		if("/".equals(URI)&&"_escaped_fragment_=".equals(queryStr)){
+			isSeo= true;
+		}
+		if(isSeo){
 			String sourceUrl = seoService.getCacheDomain()+URI+"?"+request.getQueryString();
 			String result = seoService.genHtml(sourceUrl);
 			writeReponse(response,result);

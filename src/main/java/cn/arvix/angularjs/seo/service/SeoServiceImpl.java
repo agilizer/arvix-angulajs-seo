@@ -40,7 +40,17 @@ public class SeoServiceImpl implements SeoService {
 	
 	@Override
 	public String genHtml(String sourceUrl) {
+		
 		String result = "ERROR:sourceUrl:" + sourceUrl;
+		if(null==sourceUrl){
+			return result;
+		}
+		if(sourceUrl.indexOf("_escaped_fragment_=")>0){
+			sourceUrl = sourceUrl.replace("_escaped_fragment_=", "");
+			if(sourceUrl.endsWith("?")){
+				sourceUrl = sourceUrl.substring(0, sourceUrl.length()-1);
+			}
+		}
 		if(sourceUrl.startsWith(cacheDomain)){
 			String tempResult = template.opsForValue().get(sourceUrl);
 			if(tempResult!=null){
@@ -49,25 +59,20 @@ public class SeoServiceImpl implements SeoService {
 			}
 		}
 		try {
-			if (sourceUrl != null && sourceUrl.trim().length() > 0) {
-				if(sourceUrl.indexOf("_escaped_fragment_=")>0){
-					sourceUrl = sourceUrl.replace("_escaped_fragment_=", "");
-				}
-				driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-				driver.manage().timeouts()
-						.setScriptTimeout(40, TimeUnit.SECONDS);
-				driver.get(sourceUrl);
-				NgWebDriver ngWebDriver = new NgWebDriver(driver);
-				ngWebDriver.waitForAngularRequestsToFinish();
-				// 过滤script标签
-				result = driver.getPageSource();
-				Pattern p_script = Pattern.compile(regEx_script, Pattern.CASE_INSENSITIVE);  
-		        Matcher m_script = p_script.matcher(result);  
-		        result = m_script.replaceAll("");   
-				if(sourceUrl.startsWith(cacheDomain)){
-					template.opsForValue().set(sourceUrl, result, timeout,timeoutUnit);
-					logger.info("cache set,sourceUrl :{}",sourceUrl);
-				}
+			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+			driver.manage().timeouts()
+					.setScriptTimeout(40, TimeUnit.SECONDS);
+			driver.get(sourceUrl);
+			NgWebDriver ngWebDriver = new NgWebDriver(driver);
+			ngWebDriver.waitForAngularRequestsToFinish();
+			// 过滤script标签
+			result = driver.getPageSource();
+			Pattern p_script = Pattern.compile(regEx_script, Pattern.CASE_INSENSITIVE);  
+	        Matcher m_script = p_script.matcher(result);  
+	        result = m_script.replaceAll("");   
+			if(sourceUrl.startsWith(cacheDomain)){
+				template.opsForValue().set(sourceUrl, result, timeout,timeoutUnit);
+				logger.info("cache set,sourceUrl :{}",sourceUrl);
 			}
 		} catch (Exception e) {
 			result = "ERROR:" + e.getMessage();
