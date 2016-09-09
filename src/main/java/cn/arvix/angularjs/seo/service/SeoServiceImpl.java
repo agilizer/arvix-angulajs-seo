@@ -1,13 +1,11 @@
 package cn.arvix.angularjs.seo.service;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +50,9 @@ public class SeoServiceImpl implements SeoService {
 		}
 		try {
 			if (sourceUrl != null && sourceUrl.trim().length() > 0) {
+				if(sourceUrl.indexOf("_escaped_fragment_=")>0){
+					sourceUrl = sourceUrl.replace("_escaped_fragment_=", "");
+				}
 				driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 				driver.manage().timeouts()
 						.setScriptTimeout(40, TimeUnit.SECONDS);
