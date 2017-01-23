@@ -66,9 +66,23 @@ public class ProxPassFilter implements Filter {
 			String result = seoService.genHtml(sourceUrl);
 			writeReponse(response,result);
 			return;
-		}		
+		}	
+		setCorsAccess(response,"*");
 		chain.doFilter(req, res);
 	}
+	
+	private void setCorsAccess(HttpServletResponse response,String domain){
+		response.setHeader("Access-Control-Allow-Origin", domain);
+		response.setHeader("Access-Control-Expose-Headers",
+				"x-auth-token, x-requested-with,username,password,token,content-type,accept");
+		response.setHeader("Access-Control-Allow-Methods",
+				"POST, PUT, GET, OPTIONS, DELETE");
+		response.setHeader("Access-Control-Max-Age", "3600");
+		response.setHeader("Access-Control-Allow-Headers",
+				"x-auth-token, x-requested-with,username,password,token,content-type,accept,content-length,x-app-token");
+	}
+	
+	
 	private void writeReponse(HttpServletResponse response,String result) throws IOException{
 		
 		java.io.BufferedInputStream bis = null;
