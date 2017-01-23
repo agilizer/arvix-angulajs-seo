@@ -110,4 +110,9 @@ public class SeoServiceImpl implements SeoService {
         return "success";
     }
 
+    @Override
+    public String get(String sourceUrl) {
+        return template.opsForValue().get(sourceUrl);
+    }
+
 }

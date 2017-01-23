@@ -2,6 +2,8 @@ package cn.arvix.angularjs.seo.controller;
 
 import cn.arvix.angularjs.seo.SeoConstants;
 import cn.arvix.angularjs.seo.service.SeoService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,8 +48,22 @@ public class SeoController {
     @ApiOperation(value = "添加缓存")
     @ResponseBody
     @RequestMapping(value = "/put", method = RequestMethod.POST)
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(value = "资源路径", name = "sourceUrl", dataType = "String", paramType = "query"),
+            @ApiImplicitParam(value = "文档", name = "document", dataType = "String", paramType = "query")
+    })
     public String push(String sourceUrl, String document) {
         return seoService.push(sourceUrl, document);
+    }
+
+    @ApiOperation(value = "获取缓存页面")
+    @ResponseBody
+    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(value = "资源路径", name = "sourceUrl", dataType = "String", paramType = "query")
+    })
+    public String get(String sourceUrl) {
+        return seoService.get(sourceUrl);
     }
 
 }

@@ -10,4 +10,7 @@ public interface SeoService {
     String getCacheDomain();
 
     String push(String sourceUrl, String document);
+
+    String get(String sourceUrl);
+
 }
