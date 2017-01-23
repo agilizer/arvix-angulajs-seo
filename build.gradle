@@ -4,6 +4,7 @@ buildscript {
 	}
 	repositories {
 		mavenLocal()
+		maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
 		mavenCentral()
 	}
 	dependencies {
@@ -25,6 +26,8 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
+	mavenLocal()
+	maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
 	mavenCentral()
 }
 
