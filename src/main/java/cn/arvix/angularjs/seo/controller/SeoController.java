@@ -43,7 +43,7 @@ public class SeoController {
         return SeoConstants.SUCCESS;
     }
 
-
+/*
     @ApiOperation(value = "clean")
     @ResponseBody
     @RequestMapping(value = "/clean", method = RequestMethod.POST)
@@ -51,7 +51,7 @@ public class SeoController {
         seoService.cleanCache();
         return SeoConstants.SUCCESS;
     }
-
+*/
     @ApiOperation(value = "添加缓存")
     @ResponseBody
     @RequestMapping(value = "/ng2/put", method = RequestMethod.POST)

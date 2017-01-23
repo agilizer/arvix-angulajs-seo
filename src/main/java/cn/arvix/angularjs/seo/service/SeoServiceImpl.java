@@ -109,6 +109,9 @@ public class SeoServiceImpl implements SeoService {
 
     @Override
     public String push(String sourceUrl, String document) {
+    	if(sourceUrl.contains("?e2e=true")){
+    		sourceUrl = sourceUrl.replace("?e2e=true", "");
+    	}
         template.opsForHash().put(NG2_REDIS_MAP_KEY, sourceUrl, document);
         return "success";
     }
