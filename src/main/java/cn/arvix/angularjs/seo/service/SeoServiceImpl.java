@@ -1,6 +1,7 @@
 package cn.arvix.angularjs.seo.service;
 
 import com.paulhammant.ngwebdriver.NgWebDriver;
+
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +32,7 @@ public class SeoServiceImpl implements SeoService {
     @Value("${cache.domain}")
     private String cacheDomain;
     private TimeUnit timeoutUnit = null;
+    
     private static final String regEx_script = "<script[^>]*?>[\\s\\S]*?<\\/script>"; // 定义script的正则表达式
 
     @PostConstruct
@@ -106,13 +109,17 @@ public class SeoServiceImpl implements SeoService {
 
     @Override
     public String push(String sourceUrl, String document) {
-        template.opsForValue().set(sourceUrl, document);
+        template.opsForHash().put(NG2_REDIS_MAP_KEY, sourceUrl, document);
         return "success";
     }
 
     @Override
     public String get(String sourceUrl) {
-        return template.opsForValue().get(sourceUrl);
+    	Object obj =  template.opsForHash().get(NG2_REDIS_MAP_KEY, sourceUrl);
+    	if(obj!=null){
+    		return (String) obj;
+    	}
+        return null;
     }
 
 }

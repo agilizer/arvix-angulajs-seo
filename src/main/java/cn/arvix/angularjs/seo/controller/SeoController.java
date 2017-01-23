@@ -47,7 +47,7 @@ public class SeoController {
 
     @ApiOperation(value = "添加缓存")
     @ResponseBody
-    @RequestMapping(value = "/put", method = RequestMethod.POST)
+    @RequestMapping(value = "/ng2/put", method = RequestMethod.POST)
     @ApiImplicitParams(value = {
             @ApiImplicitParam(value = "资源路径", name = "sourceUrl", dataType = "String", paramType = "query"),
             @ApiImplicitParam(value = "文档", name = "document", dataType = "String", paramType = "query")
@@ -58,7 +58,7 @@ public class SeoController {
 
     @ApiOperation(value = "获取缓存页面")
     @ResponseBody
-    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    @RequestMapping(value = "/ng2/get", method = RequestMethod.GET)
     @ApiImplicitParams(value = {
             @ApiImplicitParam(value = "资源路径", name = "sourceUrl", dataType = "String", paramType = "query")
     })
