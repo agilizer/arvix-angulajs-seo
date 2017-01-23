@@ -4,6 +4,9 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +55,21 @@ public class SeoController {
     @ApiOperation(value = "添加缓存")
     @ResponseBody
     @RequestMapping(value = "/ng2/put", method = RequestMethod.POST)
-    public String push(@RequestBody CachePage cachePage) {
-        return seoService.push(cachePage.getUrl(), cachePage.getDocument());
+    public Map<String,Object> push(@RequestBody CachePage cachePage) {
+    	Map<String,Object> result = new HashMap<String,Object>();
+    	seoService.push(cachePage.getUrl(), cachePage.getDocument());
+    	result.put("success", true);
+        return result;
+    }
+    
+    @ApiOperation(value = "添加缓存")
+    @ResponseBody
+    @RequestMapping(value = "/ng2/putQuery", method = RequestMethod.POST)
+    public Map<String,Object> pushByQuery(@RequestParam String sourceUrl, @RequestParam String document ) {
+    	Map<String,Object> result = new HashMap<String,Object>();
+    	seoService.push(sourceUrl, document);
+    	result.put("success", true);
+        return result;
     }
 
     @ApiOperation(value = "获取缓存页面")
