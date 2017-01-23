@@ -2,7 +2,9 @@ package cn.arvix.angularjs.seo;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -16,8 +18,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import cn.arvix.angularjs.seo.bean.CacheAndNgVersionBean;
+import cn.arvix.angularjs.seo.service.CacheAndNgVersionConfigService;
 import cn.arvix.angularjs.seo.service.SeoService;
 
 /**
@@ -30,10 +35,25 @@ public class ProxPassFilter implements Filter {
 //	public ProxPassFilter(SeoService seoService){
 //		this.seoService  = seoService;
 //	}
+	@Value("${spider.user.agent}")
+	private String spiderUserAgent = "";
+	private List<String> spiderList = new ArrayList<String>();
 	@Autowired
 	SeoService seoService;
+	@Autowired
+	CacheAndNgVersionConfigService cacheAndNgVersionConfigService;
+	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+		spiderUserAgent = spiderUserAgent.toLowerCase();
+		String[] temp = spiderUserAgent.split("\\|");
+		for(String s:temp){
+			if(!"".equals(s.trim())){
+				spiderList.add(s);
+			}
+		}
+		log.info("spiderUserAgent:{}",spiderUserAgent);
+		log.info("spiderList:{}",spiderList);
 	}
 
 	@Override
@@ -61,13 +81,47 @@ public class ProxPassFilter implements Filter {
 		if("/".equals(URI)&&"_escaped_fragment_=".equals(queryStr)){
 			isSeo= true;
 		}
+		if(isSeo==false){
+			String userAgent = request.getHeader("User-Agent");
+			if(userAgent!=null){
+				for(String spider:spiderList){
+					if(userAgent.toLowerCase().contains(spider)){
+						isSeo= true;
+						log.info("isSeo true,userAgent:{},spider:{}",userAgent,spider);
+						break;
+					}
+				}
+			}
+		}
 		if(isSeo){
-			String sourceUrl = seoService.getCacheDomain()+URI+"?"+request.getQueryString();
-			String result = seoService.genHtml(sourceUrl);
+			String sourceUrl = genSourceUrl(request);
+			log.info("sourceUrl:"+sourceUrl);
+			if(request.getQueryString()!=null){
+				sourceUrl = sourceUrl+"?"+request.getQueryString();
+			}
+			CacheAndNgVersionBean cacheAndNgVersion = cacheAndNgVersionConfigService.genCacheAndNgVersion(sourceUrl);
+			String result = seoService.genHtml(sourceUrl,cacheAndNgVersion.isCache(),cacheAndNgVersion.getNgVersion());
 			writeReponse(response,result);
 			return;
 		}		
 		chain.doFilter(req, res);
+	}
+	private String genSourceUrl(HttpServletRequest request ){
+		String portStr = "";
+		if(request.getServerPort()!=80){
+			portStr =  ":" + request.getServerPort(); //端口号 
+		}
+		String queryStr = "";
+		if(request.getQueryString()!=null){
+			queryStr = "?" + request.getQueryString(); 
+		}
+		String requestUrl = request.getScheme() //当前链接使用的协议
+			    + "://" + request.getServerName()//服务器地址 
+			    + portStr
+			    + request.getContextPath() //应用名称，如果应用名称为
+			    + request.getServletPath() //请求的相对url 
+			    +queryStr; //请求参数
+		return requestUrl;
 	}
 	private void writeReponse(HttpServletResponse response,String result) throws IOException{
 		

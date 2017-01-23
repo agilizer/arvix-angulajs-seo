@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.arvix.angularjs.seo.SeoConstants;
 import cn.arvix.angularjs.seo.service.SeoService;
+import cn.arvix.angularjs.seo.service.SeoService.NgVersion;
 
 @Controller()
 @RequestMapping("/api/v1/seo")
@@ -24,8 +25,8 @@ public class SeoController {
 	@ApiOperation(value = "fetch")
 	@ResponseBody
 	@RequestMapping(value = "/fetch", method = {RequestMethod.POST,RequestMethod.GET})
-	public String fetch(@RequestParam String sourceUrl, HttpServletRequest request) {
-		return seoService.genHtml(sourceUrl);
+	public String fetch(@RequestParam String sourceUrl,@RequestParam NgVersion ngVersion, HttpServletRequest request) {
+		return seoService.genHtml(sourceUrl,ngVersion);
 	}
 	
 	@ApiOperation(value = "remove")
