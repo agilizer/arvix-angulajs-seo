@@ -63,13 +63,16 @@ public class ProxPassFilter implements Filter {
 		}
 		if(isSeo){
 			String sourceUrl = seoService.getCacheDomain()+URI+"?"+request.getQueryString();
-			String result = "";
+			String result = null;
 	        if (sourceUrl.indexOf("_escaped_fragment_=") > 0) {
 	            sourceUrl = sourceUrl.replace("_escaped_fragment_=", "");
 	            if (sourceUrl.endsWith("?")) {
 	                sourceUrl = sourceUrl.substring(0, sourceUrl.length() - 1);
 	            }
 	            result = seoService.get(sourceUrl);
+	            if(result==null){
+	            	result = "not exist";
+	            }
 	        }
 			
 			writeReponse(response,result);
