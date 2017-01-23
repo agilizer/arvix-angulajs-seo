@@ -47,7 +47,7 @@ public class SeoController {
     @ResponseBody
     @RequestMapping(value = "/put", method = RequestMethod.POST)
     public String push(String sourceUrl, String document) {
-        return null;
+        return seoService.push(sourceUrl, document);
     }
 
 }
